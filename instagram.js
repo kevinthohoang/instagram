@@ -1,7 +1,7 @@
 const QUERY_HASH = '472f257a40c653c64c666ce877d59d2b';
 
-var profileID;
-var pictures = [];
+let profileID;
+let pictures = [];
 
 function getInstagramHandle() {
     return document.getElementById('instagram-handle').value;
@@ -14,7 +14,7 @@ function getInstagramURL(instagramHandle) {
 function isValidUser(instagramURL) {
     let valid = true;
 
-    $.getJSON({
+    data = $.getJSON({
         url: instagramURL,
         async: false,
         error: function (data) {
@@ -22,21 +22,11 @@ function isValidUser(instagramURL) {
         }
     });
 
-    return valid;
+    return [valid, data.responseJSON];
 }
 
-function isPrivate(instagramURL) {
-    let result;
-
-    $.getJSON({
-        url: instagramURL,
-        async: false,
-        success: function (data) {
-            result = data.graphql.user.is_private;
-        }
-    });
-
-    return Boolean(result);
+function isPrivate(data) {
+    return Boolean(data.graphql.user.is_private);
 }
 
 function getInstagramGraphURL(firstPage, endCursor) {
@@ -48,17 +38,8 @@ function getInstagramGraphURL(firstPage, endCursor) {
     }
 }
 
-function getProfileID(instagramURL) {
-    $.getJSON({
-        url: instagramURL,
-        async: false,
-        success: function (data) {
-            profileID = data.logging_page_id.substring(12);
-        },
-        error: function (data) {
-            console.log('FAILED');
-        }
-    })
+function getProfileID(data) {
+    return data.logging_page_id.substring(12);
 }
 
 function getTopPictures(instagramGraphURL) {
@@ -66,7 +47,7 @@ function getTopPictures(instagramGraphURL) {
         url: instagramGraphURL,
         async: false,
         success: function (data) {
-            var edges = data.data.user.edge_owner_to_timeline_media.edges;
+            let edges = data.data.user.edge_owner_to_timeline_media.edges;
             endCursor = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
 
             for (i = 0; i < edges.length; i++) {
@@ -84,16 +65,17 @@ function getTopPictures(instagramGraphURL) {
 
 $('#instagram-handle').keyup(function(e) {
     if (e.which === 13) {
-        var instagramURL = getInstagramURL(getInstagramHandle());
-
-        if (!isValidUser(instagramURL) || isPrivate(instagramURL)) {
+        let instagramURL = getInstagramURL(getInstagramHandle());
+        let [valid, data] = isValidUser(instagramURL);
+        
+        if (!valid || isPrivate(data)) {
             /*  TODO
                 - Handle nonexistent/private profiles
                 - Animation? Shake search bar?
             */
             console.log("Try again!");
         } else {
-            getProfileID(getInstagramURL(getInstagramHandle()));
+            profileID = getProfileID(data);
             getTopPictures(getInstagramGraphURL(firstPage = true));
             displayPictures();
         }
