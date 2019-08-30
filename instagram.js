@@ -11,6 +11,20 @@ function getInstagramURL(instagramHandle) {
     return `https://www.instagram.com/${instagramHandle}/?__a=1`;
 }
 
+function isValidUser(instagramURL) {
+    let valid = true;
+
+    $.getJSON({
+        url: instagramURL,
+        async: false,
+        error: function (data) {
+            valid = false;
+        }
+    });
+
+    return valid;
+}
+
 function isPrivate(instagramURL) {
     let result;
 
@@ -71,16 +85,15 @@ function getTopPictures(instagramGraphURL) {
 $('#instagram-handle').keyup(function(e) {
     if (e.which === 13) {
         var instagramURL = getInstagramURL(getInstagramHandle());
-        
-        getProfileID(getInstagramURL(getInstagramHandle()));
 
-        if (isPrivate(instagramURL)) {
+        if (!isValidUser(instagramURL) || isPrivate(instagramURL)) {
             /*  TODO
                 - Handle nonexistent/private profiles
                 - Animation? Shake search bar?
             */
-            console.log("Private account");
+            console.log("Try again!");
         } else {
+            getProfileID(getInstagramURL(getInstagramHandle()));
             getTopPictures(getInstagramGraphURL(firstPage = true));
             displayPictures();
         }
