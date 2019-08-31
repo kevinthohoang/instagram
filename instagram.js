@@ -1,7 +1,7 @@
 const QUERY_HASH = '472f257a40c653c64c666ce877d59d2b';
 
 let profileID;
-let pictures = [];
+let photos = [];
 
 function getInstagramHandle() {
     return document.getElementById('instagram-handle').value;
@@ -9,6 +9,15 @@ function getInstagramHandle() {
 
 function getInstagramURL(instagramHandle) {
     return `https://www.instagram.com/${instagramHandle}/?__a=1`;
+}
+
+function getInstagramGraphURL(firstPage, endCursor) {
+    if (firstPage) {
+        return `https://www.instagram.com/graphql/query/?query_hash=${QUERY_HASH}&variables={"id":"${profileID}","first":50}`;
+    }
+    else {
+        return `https://www.instagram.com/graphql/query/?query_hash=${QUERY_HASH}&variables={"id":"${profileID}","first":50,"after":"${endCursor}"}`;
+    }
 }
 
 function isValidUser(instagramURL) {
@@ -29,20 +38,11 @@ function isPrivate(data) {
     return Boolean(data.graphql.user.is_private);
 }
 
-function getInstagramGraphURL(firstPage, endCursor) {
-    if (firstPage) {
-        return `https://www.instagram.com/graphql/query/?query_hash=${QUERY_HASH}&variables={"id":"${profileID}","first":50}`;
-    }
-    else {
-        return `https://www.instagram.com/graphql/query/?query_hash=${QUERY_HASH}&variables={"id":"${profileID}","first":50,"after":"${endCursor}"}`;
-    }
-}
-
 function getProfileID(data) {
     return data.logging_page_id.substring(12);
 }
 
-function getTopPictures(instagramGraphURL) {
+function getTopPhotos(instagramGraphURL) {
     $.getJSON({
         url: instagramGraphURL,
         async: false,
@@ -51,16 +51,28 @@ function getTopPictures(instagramGraphURL) {
             endCursor = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
 
             for (i = 0; i < edges.length; i++) {
-                pictures.push([edges[i].node.edge_media_preview_like.count, edges[i].node.thumbnail_src]);
+                photos.push([edges[i].node.edge_media_preview_like.count, edges[i].node.thumbnail_src]);
             }
 
             if (endCursor !== null) {
-                getTopPictures(getInstagramGraphURL(false, endCursor));
+                getTopPhotos(getInstagramGraphURL(false, endCursor));
             }
 
-            pictures.sort((picX, picY) => {return picY[0] - picX[0]});
+            photos.sort((photoX, photoY) => {return photoY[0] - photoX[0]});
         }
     })
+    /*  TODO
+        Loading icon?
+    */
+}
+
+function displayPhotos() {
+    for (i = 0; i < 5; i++) {
+        document.getElementById(`photo${i}`).src = photos[i][1];
+    }
+
+    // Reset for next user search
+    photos = [];
 }
 
 $('#instagram-handle').keyup(function(e) {
@@ -76,17 +88,16 @@ $('#instagram-handle').keyup(function(e) {
             console.log("Try again!");
         } else {
             profileID = getProfileID(data);
-            getTopPictures(getInstagramGraphURL(firstPage = true));
-            displayPictures();
+            getTopPhotos(getInstagramGraphURL(firstPage = true));
+            displayPhotos();
         }
     }
 });
 
-function displayPictures() {
-    for (i = 0; i < 5; i++) {
-        document.getElementById(`picture${i}`).src = pictures[i][1];
-    }
+/*  TODO
+    Hide img html while there's no photos
+*/
 
-    // Reset for next user search
-    pictures = [];
-}
+/*  TODO
+    Submit button?
+*/
