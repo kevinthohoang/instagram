@@ -5,7 +5,7 @@ h1 {
 }
 
 body {
-    background: url(/pink\ dust.png);
+    background-color: rgb(250, 250, 250);
 }
 
 .search-container {
@@ -13,10 +13,41 @@ body {
     justify-content: center;
 }
 
-.picture-container {
-    display: flex;
-    justify-content: space-around;
+input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 500px;
+    background: #f1f1f1;
 }
 
+button {
+    float: left;
+    width: 50px;
+    padding: 10px;
+    background: #2196F3;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+}
 
+button:hover {
+    background: #0b7dda;
+}
 
+.photo-grid-container {
+    display: flex;
+    justify-content: center;
+}
+
+.photo-grid {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.photo-grid-item {
+    
+}

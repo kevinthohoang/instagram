@@ -75,7 +75,7 @@ function displayPhotos() {
     photos = [];
 }
 
-$('#instagram-handle').keyup(function(e) {
+$('#instagram-handle').keyup(function (e) {
     if (e.which === 13) {
         let instagramURL = getInstagramURL(getInstagramHandle());
         let [valid, data] = isValidUser(instagramURL);
@@ -93,6 +93,17 @@ $('#instagram-handle').keyup(function(e) {
         }
     }
 });
+
+$('img').mouseenter(function () {
+    document.getElementById(this.id).style.opacity = 0.5;
+}).mouseleave(function () {
+    document.getElementById(this.id).style.opacity = 1.0;
+});
+
+/*
+.mouseleave(function () {
+    console.log("test2");
+});*/
 
 /*  TODO
     Hide img html while there's no photos
