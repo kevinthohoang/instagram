@@ -4,7 +4,7 @@ let profileID;
 let photos = [];
 
 function getInstagramHandle() {
-    return document.getElementById('instagram-handle').value;
+    return document.getElementById('instagram-handle-search').value;
 }
 
 function getInstagramURL(instagramHandle) {
@@ -78,8 +78,14 @@ function getTopPhotos(instagramGraphURL) {
     */
 }
 
-function displayProfileInfo(profileInfo) {
+function displayProfileInfo(profileInfo, instagramHandle) {
     document.getElementById('profile-picture').src = profileInfo[0];
+    document.getElementById('instagram-handle').innerHTML = instagramHandle;
+    document.getElementById('posts-count').innerHTML = '<b>' + profileInfo[1] + '</b> posts';
+    document.getElementById('followers-count').innerHTML = '<b>' + profileInfo[2] + '</b> followers';
+    document.getElementById('following-count').innerHTML = '<b>' + profileInfo[3] + '</b> following';
+    document.getElementById('full-name').innerHTML = '<b>' + profileInfo[4] + '</b>';
+    document.getElementById('biography').innerHTML = profileInfo[5];
 }
 
 function displayPhotos() {
@@ -91,9 +97,10 @@ function displayPhotos() {
     photos = [];
 }
 
-$('#instagram-handle').keyup(function (e) {
+$('#instagram-handle-search').keyup(function (e) {
     if (e.which === 13) {
-        let instagramURL = getInstagramURL(getInstagramHandle());
+        let instagramHandle = getInstagramHandle();
+        let instagramURL = getInstagramURL(instagramHandle);
         let [valid, data] = isValidUser(instagramURL);
         
         if (!valid || isPrivate(data)) {
@@ -106,7 +113,7 @@ $('#instagram-handle').keyup(function (e) {
             profileInfo = getProfileInfo(data);
             profileID = getProfileID(data);
             getTopPhotos(getInstagramGraphURL(firstPage = true));
-            displayProfileInfo(profileInfo);
+            displayProfileInfo(profileInfo, instagramHandle);
             displayPhotos();
         }
     }
