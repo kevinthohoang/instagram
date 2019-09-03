@@ -51,7 +51,7 @@ function getTopPhotos(instagramGraphURL) {
             endCursor = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
 
             for (i = 0; i < edges.length; i++) {
-                photos.push([edges[i].node.edge_media_preview_like.count, edges[i].node.thumbnail_src]);
+                photos.push([edges[i].node.edge_media_preview_like.count, edges[i].node.edge_media_to_comment.count, edges[i].node.thumbnail_src]);
             }
 
             if (endCursor !== null) {
@@ -68,7 +68,7 @@ function getTopPhotos(instagramGraphURL) {
 
 function displayPhotos() {
     for (i = 0; i < 5; i++) {
-        document.getElementById(`photo${i}`).src = photos[i][1];
+        document.getElementById(`photo${i}`).src = photos[i][2];
     }
 
     // Reset for next user search
@@ -99,15 +99,6 @@ $('img').mouseenter(function () {
 }).mouseleave(function () {
     document.getElementById(this.id).style.opacity = 1.0;
 });
-
-/*
-.mouseleave(function () {
-    console.log("test2");
-});*/
-
-/*  TODO
-    Hide img html while there's no photos
-*/
 
 /*  TODO
     Submit button?
