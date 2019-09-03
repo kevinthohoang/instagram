@@ -1,11 +1,17 @@
+body {
+    background-color: rgb(250, 250, 250);
+}
+
+.banner {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 1px rgb(230, 230, 230);
+    height: 68px;
+}
+
 h1 {
     color: white;
     display: flex;
     justify-content: center;
-}
-
-body {
-    background-color: rgb(250, 250, 250);
 }
 
 .search-container {
@@ -36,6 +42,16 @@ button {
 button:hover {
     background: #0b7dda;
 }
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+}
+
+#profile-picture {
+    border-radius: 50%;
+}
+
 
 .photo-grid-container {
     display: flex;

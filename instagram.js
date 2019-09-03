@@ -42,6 +42,18 @@ function getProfileID(data) {
     return data.logging_page_id.substring(12);
 }
 
+function getProfileInfo(data) {
+    let user = data.graphql.user;
+
+    /*
+        0: Profile Picture  3: Following  
+        1: Posts            4: Full Name
+        2: Followers        5: Biography
+    */
+    return [user.profile_pic_url, user.edge_owner_to_timeline_media.count, user.edge_followed_by.count, 
+            user.edge_follow.count, user.full_name, user.biography]
+}
+
 function getTopPhotos(instagramGraphURL) {
     $.getJSON({
         url: instagramGraphURL,
@@ -66,6 +78,10 @@ function getTopPhotos(instagramGraphURL) {
     */
 }
 
+function displayProfileInfo(profileInfo) {
+    document.getElementById('profile-picture').src = profileInfo[0];
+}
+
 function displayPhotos() {
     for (i = 0; i < 5; i++) {
         document.getElementById(`photo${i}`).src = photos[i][2];
@@ -87,8 +103,10 @@ $('#instagram-handle').keyup(function (e) {
             */
             console.log("Try again!");
         } else {
+            profileInfo = getProfileInfo(data);
             profileID = getProfileID(data);
             getTopPhotos(getInstagramGraphURL(firstPage = true));
+            displayProfileInfo(profileInfo);
             displayPhotos();
         }
     }
@@ -99,6 +117,10 @@ $('img').mouseenter(function () {
 }).mouseleave(function () {
     document.getElementById(this.id).style.opacity = 1.0;
 });
+
+/*  TODO
+    Load profile information?
+*/
 
 /*  TODO
     Submit button?
