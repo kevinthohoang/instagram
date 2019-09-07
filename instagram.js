@@ -93,9 +93,17 @@ function displayPhotos() {
         document.getElementById(`photo${i}`).src = photos[i][2];
     }
 
+    document.getElementById("loader").setAttribute("style", "display: none;");
+
     // Reset for next user search
     photos = [];
 }
+
+$('#instagram-handle-search').keypress(function (e) {
+    if (e.which === 13) {
+        document.getElementById("loader").setAttribute("style", "display: block;");
+    }
+})
 
 $('#instagram-handle-search').keyup(function (e) {
     if (e.which === 13) {
