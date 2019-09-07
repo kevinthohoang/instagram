@@ -94,13 +94,27 @@ function displayPhotos() {
     }
 
     document.getElementById("loader").setAttribute("style", "display: none;");
+}
 
-    // Reset for next user search
+function reset() {
     photos = [];
+
+    document.getElementById('profile-picture').src = '';
+    document.getElementById('instagram-handle').innerHTML = '';
+    document.getElementById('posts-count').innerHTML = '';
+    document.getElementById('followers-count').innerHTML = '';
+    document.getElementById('following-count').innerHTML = '';
+    document.getElementById('full-name').innerHTML = '';
+    document.getElementById('biography').innerHTML = '';
+
+    for (i = 0; i < 5; i++) {
+        document.getElementById(`photo${i}`).src = '';
+    }
 }
 
 $('#instagram-handle-search').keypress(function (e) {
     if (e.which === 13) {
+        reset();
         document.getElementById("loader").setAttribute("style", "display: block;");
     }
 })
