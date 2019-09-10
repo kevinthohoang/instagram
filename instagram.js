@@ -89,7 +89,7 @@ function displayProfileInfo(profileInfo, instagramHandle) {
 }
 
 function displayPhotos() {
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 9; i++) {
         document.getElementById(`photo${i}`).src = photos[i][2];
     }
 
@@ -107,7 +107,7 @@ function reset() {
     document.getElementById('full-name').innerHTML = '';
     document.getElementById('biography').innerHTML = '';
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 9; i++) {
         document.getElementById(`photo${i}`).src = '';
     }
 }

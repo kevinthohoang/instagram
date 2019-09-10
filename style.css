@@ -68,21 +68,18 @@ button:hover {
     flex-direction: row;
 }
 
-.photo-grid-container {
+.photo-container {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    flex-direction: row;
     justify-content: center;
 }
 
-.photo-grid {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-}
-
-.photo-grid-item {
-    
-}
-
+/*
+    ANIMATED LOADER
+    @https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader
+*/
 #loader {
     display: none;
     position: absolute;
