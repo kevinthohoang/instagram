@@ -126,11 +126,9 @@ $('#instagram-handle-search').keyup(function (e) {
         let [valid, data] = isValidUser(instagramURL);
         
         if (!valid || isPrivate(data)) {
-            /*  TODO
-                - Handle nonexistent/private profiles
-                - Animation? Shake search bar?
-            */
-            console.log("Try again!");
+            // Temporary?
+            alert('User does not exist!')
+            document.getElementById("loader").setAttribute("style", "display: none;");
         } else {
             profileInfo = getProfileInfo(data);
             profileID = getProfileID(data);
