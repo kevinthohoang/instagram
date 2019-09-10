@@ -1,3 +1,13 @@
+/*
+    TODO:
+    - Display likes and comments on photo hover
+    - Fix profile information layout
+    - Round followers and following
+    - Fix timing of loader
+    - Fix photo sizes
+    - Fix photo rows for different zooms
+    - Change fonts
+*/
 const QUERY_HASH = '472f257a40c653c64c666ce877d59d2b';
 
 let profileID;
@@ -73,9 +83,6 @@ function getTopPhotos(instagramGraphURL) {
             photos.sort((photoX, photoY) => {return photoY[0] - photoX[0]});
         }
     })
-    /*  TODO
-        Loading icon?
-    */
 }
 
 function displayProfileInfo(profileInfo, instagramHandle) {
@@ -122,11 +129,16 @@ $('#instagram-handle-search').keypress(function (e) {
 $('#instagram-handle-search').keyup(function (e) {
     if (e.which === 13) {
         let instagramHandle = getInstagramHandle();
+
+        if (instagramHandle.length == 0) {
+            alert('Please enter an instagram handle!')
+            document.getElementById("loader").setAttribute("style", "display: none;");
+        }
+
         let instagramURL = getInstagramURL(instagramHandle);
         let [valid, data] = isValidUser(instagramURL);
         
         if (!valid || isPrivate(data)) {
-            // Temporary?
             alert('User does not exist!')
             document.getElementById("loader").setAttribute("style", "display: none;");
         } else {
@@ -144,11 +156,3 @@ $('img').mouseenter(function () {
 }).mouseleave(function () {
     document.getElementById(this.id).style.opacity = 1.0;
 });
-
-/*  TODO
-    Load profile information?
-*/
-
-/*  TODO
-    Submit button?
-*/
