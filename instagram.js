@@ -86,6 +86,7 @@ function getTopPhotos(instagramGraphURL) {
 }
 
 function displayProfileInfo(profileInfo, instagramHandle) {
+    document.getElementById('profile-picture').setAttribute("style", "display: block")
     document.getElementById('profile-picture').src = profileInfo[0];
     document.getElementById('instagram-handle').innerHTML = instagramHandle;
     document.getElementById('posts-count').innerHTML = '<b>' + profileInfo[1] + '</b> posts';
