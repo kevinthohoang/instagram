@@ -4,8 +4,6 @@
     - Fix profile information layout
     - Round followers and following
     - Fix timing of loader
-    - Fix photo sizes
-    - Fix photo rows for different zooms
     - Change fonts
 */
 const QUERY_HASH = '472f257a40c653c64c666ce877d59d2b';
@@ -36,7 +34,7 @@ function isValidUser(instagramURL) {
     data = $.getJSON({
         url: instagramURL,
         async: false,
-        error: function (data) {
+        error: function(data) {
             valid = false;
         }
     });
@@ -68,7 +66,7 @@ function getTopPhotos(instagramGraphURL) {
     $.getJSON({
         url: instagramGraphURL,
         async: false,
-        success: function (data) {
+        success: function(data) {
             let edges = data.data.user.edge_owner_to_timeline_media.edges;
             endCursor = data.data.user.edge_owner_to_timeline_media.page_info.end_cursor;
 
@@ -98,7 +96,7 @@ function displayProfileInfo(profileInfo, instagramHandle) {
 
 function displayPhotos() {
     for (i = 0; i < 9; i++) {
-        document.getElementById(`photo${i}`).src = photos[i][2];
+        document.getElementById(`photo${i + 1}`).src = photos[i + 1][2];
     }
 
     document.getElementById("loader").setAttribute("style", "display: none;");
@@ -107,6 +105,7 @@ function displayPhotos() {
 function reset() {
     photos = [];
 
+    document.getElementById('profile-picture').setAttribute("style", "display: none")
     document.getElementById('profile-picture').src = '';
     document.getElementById('instagram-handle').innerHTML = '';
     document.getElementById('posts-count').innerHTML = '';
@@ -116,18 +115,18 @@ function reset() {
     document.getElementById('biography').innerHTML = '';
 
     for (i = 0; i < 9; i++) {
-        document.getElementById(`photo${i}`).src = '';
+        document.getElementById(`photo${i + 1}`).src = `numbers/number-${i + 1}.png`;
     }
 }
 
-$('#instagram-handle-search').keypress(function (e) {
+$('#instagram-handle-search').keypress(function(e) {
     if (e.which === 13) {
         reset();
         document.getElementById("loader").setAttribute("style", "display: block;");
     }
 })
 
-$('#instagram-handle-search').keyup(function (e) {
+$('#instagram-handle-search').keyup(function(e) {
     if (e.which === 13) {
         let instagramHandle = getInstagramHandle();
 
@@ -152,8 +151,26 @@ $('#instagram-handle-search').keyup(function (e) {
     }
 });
 
-$('img').mouseenter(function () {
-    document.getElementById(this.id).style.opacity = 0.5;
-}).mouseleave(function () {
-    document.getElementById(this.id).style.opacity = 1.0;
+$('.photo-container').mouseenter(function() {
+    let photo = $(this).children('img')[0];
+
+    if (!photo.src.includes('number'))
+    {
+        let photoNumber = parseInt(photo.id.charAt(5));
+
+        document.getElementById(`photo${photoNumber}-total-likes`).innerHTML = photos[`${photoNumber}`][0];
+        //document.getElementById(`photo${photoNumber}-total-comments`).innerHTML = photos[`${photoNumber}`][1];
+        document.getElementById(`photo${photoNumber}-black-tint`).style.display = 'block';
+    }
+}).mouseleave(function() {
+    let photo = $(this).children('img')[0];
+
+    if (!photo.src.includes('number'))
+    {
+        let photoNumber = parseInt(photo.id.charAt(5));
+
+        document.getElementById(`photo${photoNumber}-total-likes`).innerHTML = '';
+        document.getElementById(`photo${photoNumber}-total-comments`).innerHTML = '';
+        document.getElementById(`photo${photoNumber}-black-tint`).style.display = 'none';
+    }
 });
